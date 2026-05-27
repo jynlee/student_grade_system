@@ -1,0 +1,67 @@
+# =============================================================================
+# 학생 성적 관리 시스템 — Docker Compose 정의
+# =============================================================================
+# 3개 서비스: frontend (nginx), backend (Tomcat), db (MySQL)
+# 컨테이너 간 통신: Docker 기본 브리지 네트워크에서 서비스명을 호스트명으로 사용
+# 데이터 영속화: mysql_data 명명 볼륨을 /var/lib/mysql 에 마운트
+# =============================================================================
+version: "3.8"
+
+services:
+  # ---------------------------------------------------------------------------
+  # MySQL 데이터베이스
+  # ---------------------------------------------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: students-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: studentpass
+      MYSQL_DATABASE: students
+    ports:
+      - "3306:3306"   # 호스트의 3306 → 컨테이너 3306 (디버깅용, 운영에서는 제거 권장)
+    volumes:
+      - mysql_data:/var/lib/mysql                          # 데이터 영속화
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql # 최초 기동 시 자동 실행
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pstudentpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Backend (Tomcat + WAR)
+  # ---------------------------------------------------------------------------
+  backend:
+    build: ./backend
+    container_name: students-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: students
+      DB_USER: root
+      DB_PASSWORD: studentpass
+    ports:
+      - "8081:8080"  # 호스트의 8081 → 컨테이너의 Tomcat 8080
+    depends_on:
+      db:
+        condition: service_healthy  # MySQL이 healthy 상태가 된 후에 시작
+
+  # ---------------------------------------------------------------------------
+  # Frontend (nginx)
+  # ---------------------------------------------------------------------------
+  frontend:
+    build: ./frontend
+    container_name: students-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"    # 호스트의 8080 → 컨테이너의 nginx 80
+    depends_on:
+      - backend
+
+# =============================================================================
+# 명명 볼륨 정의 — 컨테이너 재시작 후에도 MySQL 데이터 유지
+# =============================================================================
+volumes:
+  mysql_data:
