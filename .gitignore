@@ -22,3 +22,9 @@ docker-compose.override.yml
 
 # Env
 .env
+
+# 강의 공지 PDF (저작권 — git에 올리지 않음)
+*.pdf
+
+# Claude Code 작업용 메모 (로컬 전용)
+docs/superpowers/
