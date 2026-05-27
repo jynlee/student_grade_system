@@ -61,10 +61,12 @@ docker compose exec db mysql -uroot -pstudentpass students
 
 ## 접속 URL / 포트
 
+브라우저는 **`http://localhost:8080` 하나만** 사용합니다. `/api/*` 호출은 nginx가 자동으로 백엔드로 프록시합니다 — CORS 신경 안 써도 됩니다.
+
 | 서비스 | 호스트 포트 | 내부 포트 | 비고 |
 |--------|-------------|-----------|------|
-| 프론트엔드 (nginx) | 8080 | 80 | http://localhost:8080 |
-| 백엔드 (Tomcat) | 8081 | 8080 | http://localhost:8081/ |
+| 프론트엔드 (nginx) | **8080** | 80 | http://localhost:8080 — 메인 진입점 |
+| 백엔드 (Tomcat) | 8081 | 8080 | 디버깅용 직접 호출 (예: `curl http://localhost:8081/api/students`) |
 | DB (MySQL) | 3306 | 3306 | 디버깅용으로 노출, 운영에서는 닫기 권장 |
 
 DB 계정은 `docker-compose.yml`에 평문으로 들어 있습니다 (수업 과제용). 실 운영이라면 `.env` 분리하세요.
@@ -77,8 +79,9 @@ students/
 │   ├── Dockerfile
 │   ├── pom.xml
 │   └── src/main/...      Servlet / Service / DAO / JDBC
-├── frontend/             정적 HTML/CSS/JS (nginx)
+├── frontend/             정적 HTML/CSS/JS (nginx + /api 리버스 프록시)
 │   ├── Dockerfile
+│   ├── nginx.conf        정적 서빙 + /api → backend 프록시 설정
 │   ├── index.html / register.html / scores.html / view.html
 │   ├── css/
 │   └── js/

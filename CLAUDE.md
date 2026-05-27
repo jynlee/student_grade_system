@@ -11,15 +11,18 @@
 - ✅ 골격: `docker-compose.yml`, `db/init.sql`, 백엔드/프론트엔드 Dockerfile
 - ✅ 백엔드: Servlet + Service + DAO + JDBC 일통 구현
 - ✅ 프론트엔드: 4개 HTML(`index`, `register`, `scores`, `view`) + JS/CSS
-- ✅ 문서: `docs/design.md`, `docs/presentation.md` 초안
-- ⏳ 남은 일거리(예시): 입력 검증 보강, 발표 자료 마감, 실행 스크린샷, 등급 계산 엣지케이스
+- ✅ 아키텍처: nginx 리버스 프록시(`/api → backend:8080`), `API_BASE = "/api"` 상대경로, CORS 우회 불필요
+- ✅ 에러 처리: `api.js`가 네트워크 오류를 `status:0`으로 정규화하여 호출자에게 일관된 분기 제공
+- ✅ 문서: `docs/design.md` (등급 산식·반올림 규칙 명시 포함), `docs/presentation.md` 초안
+- ⏳ 남은 일거리 (도커 환경 확보 후): 다른 컴퓨터에서 `docker compose up --build`로 실제 동작 검증, 발표 자료 마감, 실행 스크린샷 캡처
 
 ## 기술 스택 / 포트 / 빌드
 
 - Java 17 + Servlet 4.0 + Tomcat 9 (WAR, Maven 멀티스테이지 빌드)
 - 정적 nginx + Vanilla JS (프레임워크 없음)
 - MySQL 8.0, 컨테이너 호스트명 `db`, `init.sql`로 스키마/시드 자동 주입
-- 호스트 포트: frontend `8080`, backend `8081`, db `3306`
+- 호스트 포트: frontend `8080` (메인 진입점), backend `8081` (디버깅용 직접 호출), db `3306` (디버깅용)
+- 브라우저는 8080 한곳만 사용 → `/api/*`는 nginx가 컨테이너 내부 `backend:8080`로 프록시
 - 모든 빌드는 `docker compose up --build`에서 끝남 — 호스트 JDK/Maven 불필요
 
 ## 코드 구조 (탐색용)

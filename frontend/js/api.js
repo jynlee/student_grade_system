@@ -1,17 +1,20 @@
 /* =============================================================================
  * 백엔드 API 호출 공통 함수.
  *
- * 백엔드 컨테이너는 포트 8081 에서 동작 (Docker Compose 설정).
- * fetch 응답을 JSON 으로 파싱하고, 에러 코드를 호출자에게 그대로 전달한다.
+ * 같은 origin(프론트 포트)으로 /api/* 호출 → nginx가 backend 컨테이너로 프록시.
+ * fetch 응답을 JSON으로 파싱하고, 에러 코드를 호출자에게 그대로 전달한다.
+ * 네트워크 오류는 status:0 + 안내 메시지로 정규화하여 호출자가 분기할 수 있게 한다.
  * ============================================================================= */
 
-const API_BASE = "http://localhost:8081/api";
+const API_BASE = "/api";
 
 /**
  * 공통 fetch 래퍼.
  * @param {string} path  /students, /students/1 등
  * @param {object} options  { method, body }  body는 객체 (자동 JSON.stringify)
  * @returns {Promise<{status:number, data:any}>}
+ *   - 정상 응답: { status: 200~5xx, data: 파싱된 JSON / 텍스트 / null }
+ *   - 네트워크 오류(서버 다운, DNS 실패 등): { status: 0, data: { message } }
  */
 async function request(path, options = {}) {
   const config = {
@@ -21,9 +24,21 @@ async function request(path, options = {}) {
   if (options.body !== undefined) {
     config.body = JSON.stringify(options.body);
   }
-  const res = await fetch(API_BASE + path, config);
-  let data = null;
+
+  let res;
+  try {
+    res = await fetch(API_BASE + path, config);
+  } catch (err) {
+    // 네트워크 실패 — 백엔드 다운/방화벽/DNS 등. throw 하지 않고 정규화된 응답으로 변환.
+    console.error("API 네트워크 오류:", err);
+    return {
+      status: 0,
+      data: { message: "서버에 연결할 수 없습니다. 백엔드가 실행 중인지 확인하세요." },
+    };
+  }
+
   // 204 등 본문 없는 응답에도 안전하게 동작
+  let data = null;
   const text = await res.text();
   if (text) {
     try { data = JSON.parse(text); }
