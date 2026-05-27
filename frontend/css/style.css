@@ -1,0 +1,141 @@
+/* =============================================================================
+   학생 성적 관리 시스템 — 공통 스타일
+   ============================================================================= */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", "맑은 고딕", sans-serif;
+  background: #f5f7fa;
+  color: #222;
+  line-height: 1.5;
+}
+
+/* 상단 네비게이션 바 */
+nav.topbar {
+  background: #2e6f9a;
+  color: white;
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+nav.topbar h1 {
+  font-size: 1.15rem;
+  margin-right: auto;
+}
+nav.topbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+}
+nav.topbar a:hover { background: rgba(255,255,255,0.15); }
+nav.topbar a.active { background: rgba(255,255,255,0.25); font-weight: 600; }
+
+/* 컨테이너 */
+.container {
+  max-width: 920px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 { margin-bottom: 1rem; font-size: 1.3rem; }
+h3 { margin-bottom: 0.75rem; font-size: 1.1rem; color: #444; }
+
+/* 폼 */
+.form-row { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; align-items: center; }
+.form-row label { width: 90px; font-weight: 600; color: #444; }
+.form-row input, .form-row select {
+  flex: 1;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #ccd2d8;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.form-row input:focus, .form-row select:focus {
+  outline: none;
+  border-color: #2e6f9a;
+}
+
+/* 버튼 */
+button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  background: #2e6f9a;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { background: #245a7e; }
+button.secondary { background: #6c757d; }
+button.secondary:hover { background: #565e64; }
+button.danger { background: #c0392b; }
+button.danger:hover { background: #962d22; }
+button.small { padding: 0.35rem 0.7rem; font-size: 0.85rem; }
+
+/* 테이블 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+th, td {
+  text-align: left;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid #e9ecef;
+}
+th { background: #f0f3f6; font-size: 0.9rem; color: #444; }
+tbody tr:hover { background: #f9fbfd; }
+
+/* 메시지 */
+.message {
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  display: none;
+}
+.message.error { background: #fce8e6; color: #9b1c1c; border-left: 4px solid #c0392b; display: block; }
+.message.success { background: #e6f3ec; color: #1d6b3e; border-left: 4px solid #2e8b57; display: block; }
+
+/* 결과 요약 */
+.summary {
+  background: #f0f3f6;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.summary div { font-size: 0.95rem; }
+.summary span { font-weight: 600; color: #2e6f9a; }
+
+/* 등급 배지 */
+.grade {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+}
+.grade-A { background: #27ae60; }
+.grade-B { background: #2980b9; }
+.grade-C { background: #f39c12; }
+.grade-D { background: #d35400; }
+.grade-F { background: #c0392b; }
+
+.text-center { text-align: center; }
+.text-muted { color: #888; font-size: 0.9rem; }
