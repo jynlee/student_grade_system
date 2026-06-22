@@ -3,6 +3,10 @@
 -- 컨테이너 최초 기동 시 자동 실행됨 (MySQL 공식 이미지의 /docker-entrypoint-initdb.d/ 메커니즘)
 -- =============================================================================
 
+-- MySQL 클라이언트(Docker 엔트리포인트 포함) charset을 utf8mb4로 강제
+-- 이 설정이 없으면 한글 데이터가 latin1로 해석되어 이중 인코딩됨
+SET NAMES utf8mb4;
+
 -- 데이터베이스 생성 및 선택
 CREATE DATABASE IF NOT EXISTS students
     CHARACTER SET utf8mb4

@@ -21,13 +21,13 @@ public class DbConnection {
     private static final String DB_USER     = System.getenv().getOrDefault("DB_USER", "root");
     private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "studentpass");
 
-    // 연결 URL — useUnicode/charset을 명시해 한글 데이터 처리
+    // connectionCollation: Connector/J 8.0.26+에서 MySQL 세션 charset/collation을 강제 설정
+    // SET NAMES utf8mb4 COLLATE utf8mb4_0900_ai_ci 를 핸드셰이크 시 전송 → 드라이버 내부 디코더도 utf8mb4로 갱신
     private static final String JDBC_URL = String.format(
-        "jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul",
+        "jdbc:mysql://%s:%s/%s?connectionCollation=utf8mb4_0900_ai_ci&serverTimezone=Asia/Seoul",
         DB_HOST, DB_PORT, DB_NAME);
 
     static {
-        // MySQL JDBC 드라이버 명시 로딩 (JDBC 4.0 이후 자동 로딩되지만 안전 차원)
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {

@@ -14,7 +14,11 @@
 - ✅ 아키텍처: nginx 리버스 프록시(`/api → backend:8080`), `API_BASE = "/api"` 상대경로, CORS 우회 불필요
 - ✅ 에러 처리: `api.js`가 네트워크 오류를 `status:0`으로 정규화하여 호출자에게 일관된 분기 제공
 - ✅ 문서: `docs/design.md` (등급 산식·반올림 규칙 명시 포함), `docs/presentation.md` 초안
-- ⏳ 남은 일거리 (도커 환경 확보 후): 다른 컴퓨터에서 `docker compose up --build`로 실제 동작 검증, 발표 자료 마감, 실행 스크린샷 캡처
+- ✅ **한글 인코딩 버그 수정** (2026-05-27):
+  - `db/init.sql` 맨 위에 `SET NAMES utf8mb4;` 추가 → Docker 엔트리포인트 이중인코딩 방지
+  - `DbConnection.java` JDBC URL에 `connectionCollation=utf8mb4_0900_ai_ci` 추가 → JDBC 내부 디코더를 utf8mb4로 강제
+  - `docker-compose.yml`의 deprecated `version:` 필드 제거
+- ⏳ 남은 일거리: 발표 자료 마감 (발표자 이름 기입), 실행 스크린샷 캡처
 
 ## 기술 스택 / 포트 / 빌드
 
@@ -39,7 +43,7 @@ frontend/
 db/init.sql               students, scores 테이블 + 시드
 ```
 
-API 베이스: `http://localhost:8081/api/...`. CORS는 백엔드에서 `*`로 허용. 등급 산정 로직은 Service 계층(상세는 `docs/design.md` §4 참고).
+API 베이스: `/api` (상대경로, nginx가 `backend:8080`으로 프록시). 직접 디버깅 시 `http://localhost:8081/api/...`. CORS는 백엔드에서 `*`로 허용. 등급 산정 로직은 Service 계층(상세는 `docs/design.md` §4 참고).
 
 ## 작업 컨벤션
 
