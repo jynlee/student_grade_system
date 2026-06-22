@@ -128,6 +128,16 @@ claude                            # 프로젝트 루트에서 실행
 
 상세 가이드와 진행 중인 작업 메모는 [`CLAUDE.md`](CLAUDE.md) 참고.
 
+## 실행 화면
+
+| 메인 메뉴 | 학생 등록 |
+|:---------:|:---------:|
+| ![메인 메뉴](docs/screenshots/01_index.jpg) | ![학생 등록](docs/screenshots/02_register.jpg) |
+
+| 점수 입력 | 결과 조회 |
+|:---------:|:---------:|
+| ![점수 입력](docs/screenshots/03_scores.jpg) | ![결과 조회](docs/screenshots/04_view.jpg) |
+
 ## 문서
 
 - [설계 문서](docs/design.md)
